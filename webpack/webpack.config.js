@@ -3,6 +3,9 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
    mode: "production",
+   experiments: {
+      asyncWebAssembly: true
+   },
    entry: {
     inject: path.resolve(__dirname, "..", "src", "inject.ts"),
     content: path.resolve(__dirname, "..", "src", "content.ts"),
