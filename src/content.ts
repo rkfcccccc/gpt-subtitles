@@ -1,6 +1,7 @@
 import { Netflix } from "./netflix";
 
 const netflix = new Netflix()
+var subtitlesContainer: Element, subtitlesWrapper: Element, subtitlesExplanation: Element
 
 function clear_text() {
     Array.from(document.getElementsByClassName('gpt-subtitles-row')).forEach((e) => {
@@ -8,7 +9,7 @@ function clear_text() {
     });
 }
 
-function update_text(subtitlesWrapper: Element, text: string) {
+function update_text(text: string) {
     clear_text();
 
     const lines = text.split('\n');
@@ -32,19 +33,19 @@ function update_text(subtitlesWrapper: Element, text: string) {
     }
 }
 
-function update_bottom(subtitlesWrapper: Element, bottom: number) {
+function update_bottom(bottom: number) {
     subtitlesWrapper.setAttribute('style', `bottom: ${bottom}%;`);
 }
 
 async function build(){
-    const subtitlesContainer = document.createElement('div');
+    subtitlesContainer = document.createElement('div');
     subtitlesContainer.classList.add('gpt-subtitles-container');
 
-    const subtitlesWrapper = document.createElement('div');
+    subtitlesWrapper = document.createElement('div');
     subtitlesWrapper.classList.add('gpt-subtitles-wrapper');
     subtitlesContainer.appendChild(subtitlesWrapper);
 
-    const subtitlesExplanation = document.createElement('div');
+    subtitlesExplanation = document.createElement('div');
     subtitlesExplanation.classList.add('gpt-subtitles-explanation', 'gpt-subtitles-hidden');
     subtitlesWrapper.appendChild(subtitlesExplanation);
 
