@@ -9,8 +9,7 @@ class Netflix {
     }
 
     listen (callback: (listener: SubtitleObserver) => void) {
-        var observer = new SubtitleObserver(this.player);
-        observer.addListener(callback);
+        var observer = new SubtitleObserver(this.player, callback);
         return observer;
     }
 

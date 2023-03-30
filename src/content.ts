@@ -49,9 +49,8 @@ async function build(){
     subtitlesWrapper.appendChild(subtitlesExplanation);
 
     document.querySelector(netflix.anchor)!.appendChild(subtitlesContainer)
-    
-    netflix.listen((observer) => {
-        console.log(observer.getCurrentText());
+
+    const listener = netflix.listen((observer) => {
         update_text(subtitlesWrapper, observer.getCurrentText());
         update_bottom(subtitlesWrapper, observer.getBottomPercent());
     });

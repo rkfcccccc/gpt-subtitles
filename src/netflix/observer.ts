@@ -6,27 +6,19 @@ const TIMED_TEXT_SPANS = '.player-timedtext > div > span > span'
 class SubtitleObserver {
     private player: any;
     private observer: MutationObserver
-    private listeners: Array<(listener: SubtitleObserver) => void>;
 
-    constructor (player: any) {
+    constructor (player: any, listener: (listener: SubtitleObserver) => void) {
         this.player = player;
-        this.listeners = [];
 
-        this.observer = new MutationObserver(() => this.mutationCallback());
+        this.observer = new MutationObserver(() => listener(this));
         this.observer.observe(document.querySelector(TIMED_TEXT_CONTAINER)!, {
             subtree: true,
             attributes: true,
         });
     }
 
-    private mutationCallback() {
-        this.listeners.forEach(listener => {
-            listener(this);
-        });
-    }
-
-    addListener(callback: (listener: SubtitleObserver) => void) {
-        this.listeners.push(callback);
+    disconnect() {
+        this.observer.disconnect();
     }
 
     getCurrentText() {
