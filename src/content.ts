@@ -3,14 +3,14 @@ import { Netflix } from "./netflix";
 const netflix = new Netflix()
 var subtitlesContainer: Element, subtitlesWrapper: Element, subtitlesExplanation: Element
 
-function clear_text() {
+function clearText() {
     Array.from(document.getElementsByClassName('gpt-subtitles-row')).forEach((e) => {
         e.remove();
     });
 }
 
-function update_text(text: string) {
-    clear_text();
+function updateText(text: string) {
+    clearText();
 
     const lines = text.split('\n');
     for (var i = lines.length - 1; i >= 0; i--) {
@@ -33,7 +33,7 @@ function update_text(text: string) {
     }
 }
 
-function update_bottom(bottom: number) {
+function updatebottom(bottom: number) {
     subtitlesWrapper.setAttribute('style', `bottom: ${bottom}%;`);
 }
 
@@ -52,8 +52,8 @@ async function build(){
     document.querySelector(netflix.anchor)!.appendChild(subtitlesContainer)
 
     const listener = netflix.listen((observer) => {
-        update_text(subtitlesWrapper, observer.getCurrentText());
-        update_bottom(subtitlesWrapper, observer.getBottomPercent());
+        updateText(observer.getCurrentText());
+        updatebottom(observer.getBottomPercent());
     });
 }
 
