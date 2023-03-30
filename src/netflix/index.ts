@@ -2,13 +2,10 @@ import { SubtitleObserver } from "./observer"
 
 class Netflix {
     player: any;
+    anchor = '.watch-video--player-view';
 
     isReady () {
-        return window.hasOwnProperty('netflix') && document.getElementsByClassName('watch-video--player-view').length == 1;
-    }
-
-    getBottomPercent () {
-        return Math.max(10, this.player.getTimedTextSettings().bounds.bottom / window.innerHeight * 100);
+        return window.hasOwnProperty('netflix') && document.querySelector(this.anchor) != null;
     }
 
     listen (callback: (listener: SubtitleObserver) => void) {

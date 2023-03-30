@@ -33,6 +33,10 @@ class SubtitleObserver {
         var spans = Array.from(document.querySelectorAll(TIMED_TEXT_SPANS));
         return spans.map(span => cleanHTML(span.innerHTML)).join('\n');
     }
+
+    getBottomPercent () {
+        return Math.max(10, this.player.getTimedTextSettings().bounds.bottom / window.innerHeight * 100);
+    }
 }
 
 export { SubtitleObserver };
