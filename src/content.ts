@@ -1,17 +1,54 @@
+import { credentials } from "./config/credentials";
+import { buildLoadingDots } from "./loading";
 import { Netflix } from "./netflix";
+import { SubtitleObserver } from "./netflix/observer";
+import { getEnglishPrompt } from "./prompt";
 
 const netflix = new Netflix()
 var subtitlesContainer: Element, subtitlesWrapper: Element, subtitlesExplanation: Element
 
-function clearText() {
-    Array.from(document.getElementsByClassName('gpt-subtitles-row')).forEach((e) => {
-        e.remove();
-    });
+function updateExplanationText(text: string) {
+    if (subtitlesExplanation.classList.contains('gpt-subtitles-flicker')) {
+        subtitlesExplanation.classList.remove('gpt-subtitles-flicker');
+        subtitlesExplanation.innerHTML = '';
+    }
+    
+    subtitlesExplanation.innerHTML = text;
 }
 
-function updateText(text: string) {
+async function getExplanation(sentences: Array<string>, word: string) {
+    const { ChatGPTUnofficialProxyAPI } = await import('chatgpt')
+
+    subtitlesExplanation.classList.remove('gpt-subtitles-hidden');
+    subtitlesExplanation.classList.add('gpt-subtitles-flicker');
+    subtitlesExplanation.innerHTML = buildLoadingDots().outerHTML;
+
+    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://bypass.duti.tech/api/conversation');
+    const api = new ChatGPTUnofficialProxyAPI({
+        accessToken: credentials.accessToken,
+        apiReverseProxyUrl: proxyUrl,
+    })
+
+    const result = await api.sendMessage(getEnglishPrompt(sentences, word), {
+        onProgress: (partialResponse) => {
+            updateExplanationText(partialResponse.text);
+        }
+    })
+
+    console.log(result);
+}
+
+function clearText() {
+    subtitlesExplanation.classList.add('gpt-subtitles-hidden');;
+
+    const rows = Array.from(document.getElementsByClassName('gpt-subtitles-row'));
+    rows.map((e) => e.remove());
+}
+
+function updateText(observer: SubtitleObserver) {
     clearText();
 
+    const text = observer.getCurrentText();
     const lines = text.split('\n');
     for (var i = lines.length - 1; i >= 0; i--) {
         const line = lines[i];
@@ -23,7 +60,10 @@ function updateText(text: string) {
         words.forEach(word => {
             const subtitlesWord = document.createElement('div');
             subtitlesWord.classList.add('gpt-subtitles-word');
-            // subtitlesWord.onclick = () => getExplanation(...);
+            subtitlesWord.onclick = () => {
+                getExplanation(observer.getLast(5), word);
+            };
+
             subtitlesWord.innerText = word;
 
             subtitlesRow.appendChild(subtitlesWord);
@@ -52,8 +92,8 @@ async function build(){
     document.querySelector(netflix.anchor)!.appendChild(subtitlesContainer)
 
     const listener = netflix.listen((observer) => {
-        updateText(observer.getCurrentText());
-        updatebottom(observer.getBottomPercent());
+        if (observer.textUpdated) updateText(observer);
+        if (observer.bottomUpdated) updatebottom(observer.getBottomPercent());
     });
 }
 
