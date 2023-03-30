@@ -23,11 +23,14 @@ class SubtitleObserver {
 
     private lastBottom: number = -1;
 
-    constructor (player: any, listener: (listener: SubtitleObserver) => void) {
+    constructor (player: any, listener: (listener: SubtitleObserver, done: boolean) => void) {
         this.history = [];
         this.player = player;
 
         this.observer = new MutationObserver(() => {
+            const container = document.querySelector(TIMED_TEXT_CONTAINER)!;
+            const done = container == null;
+
             const text = this.getCurrentText();
             const time = this.player.getCurrentTime();
 
@@ -49,7 +52,7 @@ class SubtitleObserver {
                 this.bottomUpdated = false;
             }
 
-            listener(this);
+            listener(this, done);
         });
 
         this.observer.observe(document.querySelector(TIMED_TEXT_CONTAINER)!, {

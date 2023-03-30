@@ -6,7 +6,7 @@
     "author": "rkfcccccc",
     "content_scripts": [
         {
-            "matches": ["https://www.netflix.com/watch/*"],
+            "matches": ["https://www.netflix.com/*"],
             "js": ["inject.js"],
             "all_frames": true
         }

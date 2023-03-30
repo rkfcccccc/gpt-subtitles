@@ -77,7 +77,7 @@ function updatebottom(bottom: number) {
     subtitlesWrapper.setAttribute('style', `bottom: ${bottom}%;`);
 }
 
-async function build(){
+async function build(){    
     subtitlesContainer = document.createElement('div');
     subtitlesContainer.classList.add('gpt-subtitles-container');
 
@@ -90,8 +90,16 @@ async function build(){
     subtitlesWrapper.appendChild(subtitlesExplanation);
 
     document.querySelector(netflix.anchor)!.appendChild(subtitlesContainer)
+    console.log('gpt subtitles builded');
+    
+    const listener = netflix.listen((observer, done) => {
+        if (done) {
+            console.log('listener disconnected');
+            netflix.onload(build);
+            listener.disconnect();
+            return;
+        }
 
-    const listener = netflix.listen((observer) => {
         if (observer.textUpdated) updateText(observer);
         if (observer.bottomUpdated) updatebottom(observer.getBottomPercent());
     });

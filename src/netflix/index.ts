@@ -8,7 +8,7 @@ class Netflix {
         return window.hasOwnProperty('netflix') && document.querySelector(this.anchor) != null;
     }
 
-    listen (callback: (listener: SubtitleObserver) => void) {
+    listen (callback: (listener: SubtitleObserver, done: boolean) => void) {
         var observer = new SubtitleObserver(this.player, callback);
         return observer;
     }
@@ -17,7 +17,6 @@ class Netflix {
         if (this.isReady()) {
             var videoPlayer = (window as any).netflix.appContext.state.playerApp.getAPI().videoPlayer;
             this.player = videoPlayer.getVideoPlayerBySessionId(videoPlayer.getAllPlayerSessionIds()[0]);
-
             callback();
         } else {
             setTimeout(() => this.onload(callback), 100);
