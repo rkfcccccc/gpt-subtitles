@@ -1,0 +1,18 @@
+{
+    "name": "gpt-subtitles",
+    "version": "1.0.0",
+    "description": "Explanations for subtitles in Netflix movies with ChatGPT",
+    "manifest_version": 3,
+    "author": "rkfcccccc",
+    "content_scripts": [
+        {
+            "matches": ["https://www.netflix.com/watch/*"],
+            "js": ["inject.js"],
+            "all_frames": true
+        }
+    ],
+    "web_accessible_resources": [{ 
+        "resources": ["*"],
+        "matches": ["<all_urls>"]
+    }]
+}
